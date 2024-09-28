@@ -1,6 +1,5 @@
 #include <stdio.h>
+#include "status.h"
 
-int markInProgress(int taskID);
-int markDone(int taskID);
-int markHalt(int taskID);
+int markTask(int taskID,Status status);
 
