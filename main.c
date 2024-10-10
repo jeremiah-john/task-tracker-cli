@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "crud.h"
 int main(int argc, char **argv)
 {
 	//use strcmp(argv[i], "string") == 0 to compare command arguments
