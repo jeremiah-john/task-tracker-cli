@@ -21,7 +21,7 @@ int createObject(int id, char *description)
 	time(&globalTime);
 	timeAndDate = localTime(&globalTime);
 
-	int retVal = fprintf(json,"\"id\":%d,\"description\":%s,\"status\":\"todo\",\"createdAt\":%s,\"updatedAt\":%s",id,description,asctime(timeAndDate),asctime(timeAndDate));
+	int retVal = fprintf(json,"{\"id\":%d,\"description\":%s,\"status\":\"todo\",\"createdAt\":%s,\"updatedAt\":%s}\n",id,description,asctime(timeAndDate),asctime(timeAndDate));
 	if(retVal < 0)
 	{
 		perror("Failed to write JSON object literal to file!");
@@ -30,5 +30,8 @@ int createObject(int id, char *description)
 	return 0;
 
 }
-int updateObjectDesc(int id, char **description);
+int updateObjectDesc(int id, char **description)
+{
+	
+}
 int updateObjectStatus(int id, Status status);
