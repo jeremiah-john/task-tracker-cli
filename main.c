@@ -1,10 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 #include "crud.h"
+#include "jsonObjectCreation.h"
 int main(int argc, char **argv)
 {
 	//use strcmp(argv[i], "string") == 0 to compare command arguments
 	//add will just have argv[2] be the string description of task
+	if(initJSON() != 0)
+	{
+		return 1;
+	}
 	if(strcmp(argv[1],"add") == 0)
 	{
 		printf("successful add!\n");
