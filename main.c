@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 	if(strcmp(argv[1],"add") == 0)
 	{
 		printf("successful add!\n");
-
+		createTask(argv[2]);
 	}
 
 	//update will have argv[2] be the task ID(int), and argv[3] be a new string description of task (char*)
