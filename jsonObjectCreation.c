@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 #include "status.h"
 #include "jsonObjectCreation.h"
 //when we create json object, it should also have status, createdAt, and updatedAt properties	
@@ -21,8 +22,10 @@ int createObject(int id, char *description)
 {
 	time(&globalTime);
 	timeAndDate = localtime(&globalTime);
-
-	int retVal = fprintf(json,"{\"id\":%d,\"description\":%s,\"status\":\"todo\",\"createdAt\":%s,\"updatedAt\":%s}\n",id,description,asctime(timeAndDate),asctime(timeAndDate));
+	char timeAndDateStr[50];
+	strcpy(timeAndDateStr,asctime(timeAndDate));
+	int timeAndDateStrLen = strcspn(timeAndDateStr,"\n");
+	int retVal = fprintf(json,"{\"id\":%d,\"description\":\"%s\",\"status\":\"todo\",\"createdAt\":\"%.*s\",\"updatedAt\":\"%.*s\"}\n",id,description,timeAndDateStrLen,asctime(timeAndDate),timeAndDateStrLen,asctime(timeAndDate));
 	if(retVal < 0)
 	{
 		perror("Failed to write JSON object literal to file!");
