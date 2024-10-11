@@ -16,22 +16,40 @@ int initJSON()
 		perror("Failed to open JSON file!\n");
 		return 1;
 	}
+	fseek(json,0,SEEK_END);
+	long size = ftell(json);
+       	if(0 == size) //if the file is new
+	{
+		fprintf(json,"{\"nextID\":1}\n");
+	}
 	return 0;
 }
-int createObject(int id, char *description)
+int createObject(char *description)
 {
 	time(&globalTime);
 	timeAndDate = localtime(&globalTime);
 	char timeAndDateStr[50];
 	strcpy(timeAndDateStr,asctime(timeAndDate));
 	int timeAndDateStrLen = strcspn(timeAndDateStr,"\n");
+
+	int id = 0;
+	fseek(json,0,SEEK_SET); //so we are at the beginning of the file, where the json object holding the next available id is
+	fscanf(json,"{\"nextID\":%d}",&id);
+
+	fseek(json,0,SEEK_END); //so we are at the end of the file and don't overwrite any other objects
+
 	int retVal = fprintf(json,"{\"id\":%d,\"description\":\"%s\",\"status\":\"todo\",\"createdAt\":\"%.*s\",\"updatedAt\":\"%.*s\"}\n",id,description,timeAndDateStrLen,asctime(timeAndDate),timeAndDateStrLen,asctime(timeAndDate));
 	if(retVal < 0)
 	{
 		perror("Failed to write JSON object literal to file!");
 		return 1;
 	}
-	return 0;
+	id++;
+	int idIntFilePosition = 10; //where the nextID variable has it's actual value stored
+	fseek(json,idIntFilePosition,SEEK_SET);
+	fprintf(json,"%d",id);
+	fseek(json,0,SEEK_END);
+	return fclose(json);
 
 }
 int updateObjectDesc(int id, char **description)
