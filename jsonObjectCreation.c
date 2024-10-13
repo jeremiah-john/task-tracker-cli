@@ -11,16 +11,12 @@ struct tm *timeAndDate;
 int initJSON()
 {
 	json = fopen("tasks.json","a+");
+	//a+ means that writing to this file is always going to be at the end of the file
+	//regardless of where fseek has set the internal file pointer before
 	if(json == NULL)
 	{
 		perror("Failed to open JSON file!\n");
 		return 1;
-	}
-	fseek(json,0,SEEK_END);
-	long size = ftell(json);
-       	if(0 == size) //if the file is new
-	{
-		fprintf(json,"{\"nextID\":1}\n");
 	}
 	return 0;
 }
@@ -33,9 +29,8 @@ int createObject(char *description)
 	int timeAndDateStrLen = strcspn(timeAndDateStr,"\n");
 
 	int id = 0;
-	fseek(json,0,SEEK_SET); //so we are at the beginning of the file, where the json object holding the next available id is
-	fscanf(json,"{\"nextID\":%d}",&id);
-
+	fscanf(json,"{\"id\":%d",&id);
+	id++;
 	fseek(json,0,SEEK_END); //so we are at the end of the file and don't overwrite any other objects
 
 	int retVal = fprintf(json,"{\"id\":%d,\"description\":\"%s\",\"status\":\"todo\",\"createdAt\":\"%.*s\",\"updatedAt\":\"%.*s\"}\n",id,description,timeAndDateStrLen,asctime(timeAndDate),timeAndDateStrLen,asctime(timeAndDate));
@@ -44,11 +39,6 @@ int createObject(char *description)
 		perror("Failed to write JSON object literal to file!");
 		return 1;
 	}
-	id++;
-	int idIntFilePosition = 10; //where the nextID variable has it's actual value stored
-	fseek(json,idIntFilePosition,SEEK_SET);
-	fprintf(json,"%d",id);
-	fseek(json,0,SEEK_END);
 	return fclose(json);
 
 }
