@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
+#include <stdlib.h>
 #include "status.h"
 #include "jsonObjectCreation.h"
 //when we create json object, it should also have status, createdAt, and updatedAt properties	
@@ -20,6 +21,12 @@ int initJSON()
 	}
 	return 0;
 }
+int gen_id()
+{
+	srand(time(NULL));
+
+	return rand() %1000 + 1; //ID from 1 to 1000;
+}
 int createObject(char *description)
 {
 	time(&globalTime);
@@ -27,10 +34,9 @@ int createObject(char *description)
 	char timeAndDateStr[50];
 	strcpy(timeAndDateStr,asctime(timeAndDate));
 	int timeAndDateStrLen = strcspn(timeAndDateStr,"\n");
+	//we shall generate a unique ID using rand() and srand() (we are trying to avoid external libraries, such as libuuid)
 
-	int id = 0;
-	fscanf(json,"{\"id\":%d",&id);
-	id++;
+	int id = gen_id();
 	fseek(json,0,SEEK_END); //so we are at the end of the file and don't overwrite any other objects
 
 	int retVal = fprintf(json,"{\"id\":%d,\"description\":\"%s\",\"status\":\"todo\",\"createdAt\":\"%.*s\",\"updatedAt\":\"%.*s\"}\n",id,description,timeAndDateStrLen,asctime(timeAndDate),timeAndDateStrLen,asctime(timeAndDate));
