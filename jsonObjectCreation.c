@@ -1,33 +1,46 @@
 #include <stdio.h>
-#include <time.h>
 #include <string.h>
 #include <stdlib.h>
 #include "status.h"
 #include "jsonObjectCreation.h"
+#include "crud.h"
 //when we create json object, it should also have status, createdAt, and updatedAt properties	
 FILE* json;
-time_t globalTime;
-struct tm *timeAndDate;
 
-int initJSON()
+int readJSONFile()
 {
-	json = fopen("tasks.json","a+");
-	//a+ means that writing to this file is always going to be at the end of the file
-	//regardless of where fseek has set the internal file pointer before
+	json = fopen("tasks.json","r");
+	char nextJSONObject[200];
 	if(json == NULL)
 	{
 		perror("Failed to open JSON file!\n");
 		return 1;
 	}
-	return 0;
-}
-int gen_id()
-{
-	srand(time(NULL));
 
-	return rand() %1000 + 1; //ID from 1 to 1000;
+	while(!feof(json))
+	{
+		fgets(nextJSONObject,sizeof(nextJSONObject),json); //nextJSONObject will include newline
+		jsonObjToTask(nextJSONObject);
+		memset(nextJSONObject,0,sizeof(nextJSONObject)); //paranoid precaution to make sure no leftover chars from last fgets
+	}
+	return fclose(json);
 }
-int createObject(char *description)
+int writeJSONFile()
+{
+	json = fopen("tasks.json","w");
+	int taskIndex = 0;
+	char jsonObj[200];
+	while(1) //while no error is returned trying to convert our task to a JSON object
+	{
+		taskToJSONObj(jsonObj,taskIndex);
+		if(jsonObj == NULL) {break;}
+		fprintf(json,jsonObj);
+		taskIndex++;
+		memset(jsonObj,0,sizeof(jsonObj));
+	}
+	return fclose(json);
+}
+/*(int createObject(char *description)
 {
 	time(&globalTime);
 	timeAndDate = localtime(&globalTime);
@@ -36,7 +49,7 @@ int createObject(char *description)
 	int timeAndDateStrLen = strcspn(timeAndDateStr,"\n");
 	//we shall generate a unique ID using rand() and srand() (we are trying to avoid external libraries, such as libuuid)
 
-	int id = gen_id();
+	int id = getNextAvailableTaskID();
 	fseek(json,0,SEEK_END); //so we are at the end of the file and don't overwrite any other objects
 
 	int retVal = fprintf(json,"{\"id\":%d,\"description\":\"%s\",\"status\":\"todo\",\"createdAt\":\"%.*s\",\"updatedAt\":\"%.*s\"}\n",id,description,timeAndDateStrLen,asctime(timeAndDate),timeAndDateStrLen,asctime(timeAndDate));
@@ -47,9 +60,6 @@ int createObject(char *description)
 	}
 	return fclose(json);
 
-}
-int updateObjectDesc(int id, char **description)
-{
-	
-}
+}*/
+
 

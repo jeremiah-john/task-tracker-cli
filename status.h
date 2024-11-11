@@ -1,7 +1,8 @@
-/*enum Status {
-	notdone = 0,
-	inProgress = 1,
-	halted = 2,
-	done = 3,
+enum Status {
+	todo = 1,
+	inProgress = 2,
+	halted = 3,
+	done = 4,
+	nullStatus = 0
 };
-*/
+

@@ -6,7 +6,7 @@ int main(int argc, char **argv)
 {
 	//use strcmp(argv[i], "string") == 0 to compare command arguments
 	//add will just have argv[2] be the string description of task
-	if(initJSON() != 0)
+	if(readJSONFile() != 0)
 	{
 		return 1;
 	}
@@ -14,6 +14,7 @@ int main(int argc, char **argv)
 	{
 		printf("successful add!\n");
 		createTask(argv[2]);
+		return(writeJSONFile());
 	}
 
 	//update will have argv[2] be the task ID(int), and argv[3] be a new string description of task (char*)

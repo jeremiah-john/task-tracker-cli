@@ -1,3 +1,3 @@
-int updateObjectDesc(int id, char **description);
-int initJSON();
+int readJSONFile();
+int writeJSONFile();
 int createObject(char *description);
