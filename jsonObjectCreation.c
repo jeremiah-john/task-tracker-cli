@@ -29,11 +29,11 @@ int writeJSONFile()
 {
 	json = fopen("tasks.json","w");
 	int taskIndex = 0;
-	char jsonObj[200];
+	char jsonObj[200] = {0};
 	while(1) //while no error is returned trying to convert our task to a JSON object
 	{
 		taskToJSONObj(jsonObj,taskIndex);
-		if(jsonObj == NULL) {break;}
+		if(jsonObj[0] == 0) {break;}
 		fprintf(json,jsonObj);
 		taskIndex++;
 		memset(jsonObj,0,sizeof(jsonObj));
