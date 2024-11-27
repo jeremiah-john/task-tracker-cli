@@ -28,6 +28,7 @@ int readJSONFile()
 		fgets(nextJSONObject,sizeof(nextJSONObject),json); //nextJSONObject will include newline
 		jsonObjToTask(nextJSONObject);
 		memset(nextJSONObject,0,sizeof(nextJSONObject)); //paranoid precaution to make sure no leftover chars from last fgets
+		endOfFile = feof(json);
 	}
 	return fclose(json);
 }

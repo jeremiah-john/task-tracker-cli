@@ -81,7 +81,7 @@ void taskToJSONObj(char *jsonObjStr, int index)
 		perror("Error reading date and time!\n");
 	}
 	//using just %s instead of %.*s since we can be sure the createdAt and UpdatedAt strings are null terminated (unless?)
-		numCharsWritten = sprintf(jsonObjStr,"\"id\":%d,\"description\":\"%s\",\"status\":\"todo\",\"createdAt\":\"%s\",\"updatedAt\":\"%s\"}\n",tasks[index].id,tasks[index].description,
+		numCharsWritten = sprintf(jsonObjStr,"{\"id\":%d,\"description\":\"%s\",\"status\":\"todo\",\"createdAt\":\"%s\",\"updatedAt\":\"%s\"}\n",tasks[index].id,tasks[index].description,
 														  statusStr,
 														  createdAtTimeStr,
 														  updatedAtTimeStr);
