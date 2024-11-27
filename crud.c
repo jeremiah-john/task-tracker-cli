@@ -69,6 +69,10 @@ void taskToJSONObj(char *jsonObjStr, int index)
 	char createdAtTimeStr[50];
 	char updatedAtTimeStr[50];
 	int numCharsWritten; //sprintf returns number of characters written, not including null characters
+
+	//tm must be set for strptime to work
+	struct tm tm;
+	memset(&tm, 0, sizeof(tm));
 	if(tasks[index].id != 0)
 	{
 		statusEnumToStr(statusStr,index);
