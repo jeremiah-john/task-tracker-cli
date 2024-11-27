@@ -11,13 +11,19 @@ int readJSONFile()
 {
 	json = fopen("tasks.json","r");
 	char nextJSONObject[200];
+	int endOfFile = 0;
+
 	if(json == NULL)
 	{
 		perror("Failed to open JSON file!\n");
 		return 1;
 	}
-
-	while(!feof(json))
+	/* test if file is empty using fgetc
+	 * (feof only looks at result of last File I/O operation, based on whether EOF indicator has been set)
+	 */
+	if (endOfFile = fgetc(json) == EOF){return fclose(json);}
+	rewind(json);
+	while(endOfFile == 0)
 	{
 		fgets(nextJSONObject,sizeof(nextJSONObject),json); //nextJSONObject will include newline
 		jsonObjToTask(nextJSONObject);

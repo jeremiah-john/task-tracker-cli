@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 	if(strcmp(argv[1],"add") == 0)
 	{
 		printf("successful add!\n");
-		createTask(argv[2]);
+		int taskCreateResult = createTask(argv[2]);
 		return(writeJSONFile());
 	}
 
