@@ -49,8 +49,12 @@ void jsonObjToTask(char *jsonObjStr)
 	char statusStr[15];
 	char createdAtTimeStr[50];
 	char updatedAtTimeStr[50];
+	//check if jsonObjStr is empty
+	if(jsonObjStr[0] == '\0') {return;}
 	//%s stops after a whitespace, which is problematic for capturing the string values in our JSON object. we will use scansets instead ([^])
 	sscanf(jsonObjStr,"{\"id\":%d,\"description\":\"%50[^\"]\",\"status\":\"%15[^\"]\",\"createdAt\":\"%50[^\"]\",\"updatedAt\":\"%50[^\"]\"}\n",&tasks[nextAvailableTaskIndex].id,tasks[nextAvailableTaskIndex].description,statusStr,createdAtTimeStr,updatedAtTimeStr);
+
+
 	if(strptime(createdAtTimeStr, "%a %b %d %I:%M:%S %Y",&tasks[nextAvailableTaskIndex].createdAtTime) == NULL) //if we can't properly convert the date and time
 	{
 		perror("Error reading date and time!\n");
@@ -86,7 +90,6 @@ void taskToJSONObj(char *jsonObjStr, int index)
 	}
 	//using just %s instead of %.*s since we can be sure the createdAt and UpdatedAt strings are null terminated (unless?)
 		numCharsWritten = sprintf(jsonObjStr,"{\"id\":%d,\"description\":\"%s\",\"status\":\"todo\",\"createdAt\":\"%s\",\"updatedAt\":\"%s\"}\n",tasks[index].id,tasks[index].description,
-														  statusStr,
 														  createdAtTimeStr,
 														  updatedAtTimeStr);
 	}
