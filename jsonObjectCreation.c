@@ -15,7 +15,8 @@ int readJSONFile()
 
 	if(json == NULL)
 	{
-		perror("Failed to open JSON file!\n");
+		perror("Failed to open JSON file!");
+		fflush(stderr);
 		return 1;
 	}
 	/* test if file is empty using fgetc

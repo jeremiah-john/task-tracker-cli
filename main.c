@@ -8,7 +8,7 @@ int main(int argc, char **argv)
 	//add will just have argv[2] be the string description of task
 	if(readJSONFile() != 0)
 	{
-		printf("No Previous tasks detected!");
+		printf("No Previous tasks detected!\n");
 	}
 	if(strcmp(argv[1],"add") == 0)
 	{
