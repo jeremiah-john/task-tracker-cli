@@ -1,4 +1,5 @@
 #define _XOPEN_SOURCE
+#define MAX_TASKS 100
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
@@ -11,7 +12,7 @@ struct task_t {
 	enum Status status;
 	struct tm createdAtTime;
 	struct tm updatedAtTime;
-} tasks[100] = {0};
+} tasks[MAX_TASKS] = {0};
 int nextAvailableTaskIndex = 0;
 int nextAvailableTaskID = 1;
 enum Status statusStrToEnum(char *statusStr)
@@ -100,6 +101,7 @@ int createTask(char *taskDesc)
 	time_t currTime;
 	time(&currTime);
 	struct tm *tempTM; //for holding results of gmtime, to then copy to member struct tms of new task struct
+
 	tasks[nextAvailableTaskIndex].id = nextAvailableTaskID;
 	strcpy(tasks[nextAvailableTaskIndex].description, taskDesc);
 	tasks[nextAvailableTaskIndex].status = todo;
@@ -112,3 +114,26 @@ int createTask(char *taskDesc)
 
 }
 
+int updateTask(int taskID, char *newTaskDesc)
+{
+	time_t currTime;
+	time(&currTime);
+	struct tm *tempTM; //for holding results of gmtime, to then copy to member struct tms of task struct
+
+    int taskIndex = 0;
+
+    //now we have to search for the task by ID
+    for(int i = 0; i < MAX_TASKS; i++)
+		{
+			if(tasks[i].id == taskID)
+			{
+				taskIndex = i;
+				break;
+			}
+		}
+	strcpy(tasks[taskIndex].description, newTaskDesc);
+	tempTM = gmtime(&currTime);
+	tasks[taskIndex].updatedAtTime = *tempTM;
+
+	return 0;
+}

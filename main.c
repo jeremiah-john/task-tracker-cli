@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "crud.h"
 #include "jsonObjectCreation.h"
@@ -12,15 +13,24 @@ int main(int argc, char **argv)
 	}
 	if(strcmp(argv[1],"add") == 0)
 	{
-		printf("successful add!\n");
 		int taskCreateResult = createTask(argv[2]);
-		return(writeJSONFile());
+		if(taskCreateResult == 0)
+		{
+			printf("successful add!\n");
+
+		}
+		return writeJSONFile();
 	}
 
 	//update will have argv[2] be the task ID(int), and argv[3] be a new string description of task (char*)
 	if(strcmp(argv[1],"update") == 0)
 	{
-		printf("successful update!\n");
+		int taskUpdateResult = updateTask(atoi(argv[2]),argv[3]);
+		if(taskUpdateResult == 0)
+		{
+			printf("successful update!\n");
+		}
+		return writeJSONFile();
 	}
 	//delete will just have argv[2] be task ID(int)
 	if(strcmp(argv[1],"delete") == 0)
