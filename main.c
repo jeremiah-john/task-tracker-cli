@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #include "crud.h"
 #include "jsonObjectCreation.h"
 int main(int argc, char **argv)
@@ -11,8 +12,22 @@ int main(int argc, char **argv)
 	{
 		printf("No Previous tasks detected!\n");
 	}
+	if(argc < 2){
+		printf("Hey! give me something to do!\n");
+		return EINVAL;
+	}
 	if(strcmp(argv[1],"add") == 0)
 	{
+		if(argc < 3)
+		{
+			printf("Must give description for new task!\n");
+			return EINVAL;
+		}
+		if(argc > 3)
+		{
+			printf("Too many arguments!\nUse quotation marks (\"\") around description\n");
+			return E2BIG;
+		}
 		int taskCreateResult = createTask(argv[2]);
 		if(taskCreateResult == 0)
 		{
@@ -25,6 +40,16 @@ int main(int argc, char **argv)
 	//update will have argv[2] be the task ID(int), and argv[3] be a new string description of task (char*)
 	if(strcmp(argv[1],"update") == 0)
 	{
+		if(argc < 4)
+		{
+			printf("Must give new description for task!\n");
+			return EINVAL;
+		}
+		if(argc > 4)
+		{
+			printf("Too many arguments!\nUse quotation marks (\"\") around description\n");
+			return E2BIG;
+		}
 		int taskUpdateResult = updateTask(atoi(argv[2]),argv[3]);
 		if(taskUpdateResult == 0)
 		{
