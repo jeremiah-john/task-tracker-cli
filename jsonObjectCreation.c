@@ -12,7 +12,7 @@ int readJSONFile()
 	json = fopen("tasks.json","r");
 	char nextJSONObject[200];
 	int endOfFile = 0;
-
+	initializeLinkedList();
 	if(json == NULL)
 	{
 		perror("Failed to open JSON file!");
@@ -36,14 +36,12 @@ int readJSONFile()
 int writeJSONFile()
 {
 	json = fopen("tasks.json","w");
-	int taskIndex = 0;
 	char jsonObj[200] = {0};
 	while(1) //while no error is returned trying to convert our task to a JSON object
 	{
-		taskToJSONObj(jsonObj,taskIndex);
+		taskToJSONObj(jsonObj,returnCurrentTaskAddress());
 		if(jsonObj[0] == 0) {break;}
 		fprintf(json,jsonObj);
-		taskIndex++;
 		memset(jsonObj,0,sizeof(jsonObj));
 	}
 	return fclose(json);
