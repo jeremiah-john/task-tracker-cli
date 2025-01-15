@@ -4,6 +4,7 @@
 #include <errno.h>
 #include "crud.h"
 #include "jsonObjectCreation.h"
+#include "status.h"
 int main(int argc, char **argv)
 {
 	//use strcmp(argv[i], "string") == 0 to compare command arguments
@@ -65,7 +66,25 @@ int main(int argc, char **argv)
 	//mark-in-progress and mark-done will just take argv[2] which is integer of task ID
 	if(strcmp(argv[1],"mark-in-progress") == 0)
 	{
+		enum Status inProg = inProgress;
+		if(argc > 3)
+		{
+			printf("Too many arguments!\nOnly update one task at a time please!"); //we actually could try batch updating and deleting tasks
+			return E2BIG;
+		}
+		if(argc < 3)
+		{
+			printf("Give a task ID!\n");
+			return EINVAL;
+		}
+		int taskMarkResult = markTask(atoi(argv[2]),inProg);
+		if(taskMarkResult == -1)
+		{
+			printf("Could not mark task!\n");
+			return EINVAL;
+		}
 		printf("successful mark-in-progress!\n");
+		return writeJSONFile();
 	}
 	if(strcmp(argv[1],"mark-done") == 0)
 	{
