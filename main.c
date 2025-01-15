@@ -29,9 +29,9 @@ int main(int argc, char **argv)
 			return E2BIG;
 		}
 		int taskCreateResult = createTask(argv[2]);
-		if(taskCreateResult == 0)
+		if(taskCreateResult > 0)
 		{
-			printf("successful add!\n");
+			printf("Task Added Successfully! (ID: %d)\n",taskCreateResult);
 
 		}
 		return writeJSONFile();
