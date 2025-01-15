@@ -56,6 +56,17 @@ int getTaskIndexByID(int taskID)
 	}
 	return -1;
 }
+int markTask(int taskID, enum Status newStatus)
+{
+	int taskIndex = getTaskIndexByID(taskID);
+	if (taskIndex == -1)
+	{
+		printf("ERROR: no task found by that ID!\n");
+		return -1;
+	}
+	tasks[taskIndex].status = newStatus;
+	return 0;
+}
 void jsonObjToTask(char *jsonObjStr)
 {
 	char statusStr[15];
@@ -121,7 +132,7 @@ int createTask(char *taskDesc)
 	tempTM = gmtime(&currTime);
 	tasks[nextAvailableTaskIndex].updatedAtTime = *tempTM;
 
-	return 0;
+	return tasks[nextAvailableTaskIndex].id;
 
 }
 
@@ -131,17 +142,12 @@ int updateTask(int taskID, char *newTaskDesc)
 	time(&currTime);
 	struct tm *tempTM; //for holding results of gmtime, to then copy to member struct tms of task struct
 
-    int taskIndex = 0;
-
-    //now we have to search for the task by ID
-    for(int i = 0; i < MAX_TASKS; i++)
-		{
-			if(tasks[i].id == taskID)
-			{
-				taskIndex = i;
-				break;
-			}
-		}
+    int taskIndex = getTaskIndexByID(taskID);
+    if (taskIndex == -1)
+	{
+		printf("ERROR: no task found by that ID!\n");
+		return -1;
+	}
 	strcpy(tasks[taskIndex].description, newTaskDesc);
 	tempTM = gmtime(&currTime);
 	tasks[taskIndex].updatedAtTime = *tempTM;
