@@ -45,6 +45,17 @@ void statusEnumToStr(char *statusStr,int index)
 		case nullStatus: strcpy(statusStr, "NULL");break;
 	}
 }
+int getTaskIndexByID(int taskID)
+{
+	for(int i = 0; i < MAX_TASKS; i++)
+	{
+		if(tasks[i].id == taskID)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
 void jsonObjToTask(char *jsonObjStr)
 {
 	char statusStr[15];
