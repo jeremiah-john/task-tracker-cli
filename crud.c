@@ -87,6 +87,7 @@ void jsonObjToTask(char *jsonObjStr)
 		perror("Error reading date and time!\n");
 	}
 	//don't forget to set the staus enum of the task!
+	tasks[nextAvailableTaskIndex].status = statusStrToEnum(statusStr);
 	nextAvailableTaskID = tasks[nextAvailableTaskIndex].id + 1;
 	nextAvailableTaskIndex++;
 }
@@ -112,7 +113,8 @@ void taskToJSONObj(char *jsonObjStr, int index)
 		perror("Error reading date and time!\n");
 	}
 	//using just %s instead of %.*s since we can be sure the createdAt and UpdatedAt strings are null terminated (unless?)
-		numCharsWritten = sprintf(jsonObjStr,"{\"id\":%d,\"description\":\"%s\",\"status\":\"todo\",\"createdAt\":\"%s\",\"updatedAt\":\"%s\"}\n",tasks[index].id,tasks[index].description,
+		numCharsWritten = sprintf(jsonObjStr,"{\"id\":%d,\"description\":\"%s\",\"status\":\"%s\",\"createdAt\":\"%s\",\"updatedAt\":\"%s\"}\n",tasks[index].id,tasks[index].description,
+														  statusStr,
 														  createdAtTimeStr,
 														  updatedAtTimeStr);
 	}
