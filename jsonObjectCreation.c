@@ -22,7 +22,7 @@ int readJSONFile()
 	/* test if file is empty using fgetc
 	 * (feof only looks at result of last File I/O operation, based on whether EOF indicator has been set)
 	 */
-	if (endOfFile = fgetc(json) == EOF){return fclose(json);}
+	if ( ( endOfFile = fgetc(json) ) == EOF){return fclose(json);}
 	rewind(json);
 	while(endOfFile == 0)
 	{
