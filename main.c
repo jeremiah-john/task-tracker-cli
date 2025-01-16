@@ -52,10 +52,12 @@ int main(int argc, char **argv)
 			return E2BIG;
 		}
 		int taskUpdateResult = updateTask(atoi(argv[2]),argv[3]);
-		if(taskUpdateResult == 0)
+		if(taskUpdateResult == -1)
 		{
-			printf("successful update!\n");
+			printf("Could not update specified task!\n");
+			return EINVAL;
 		}
+		printf("successful update!\n");
 		return writeJSONFile();
 	}
 	//delete will just have argv[2] be task ID(int)
