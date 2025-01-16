@@ -97,7 +97,6 @@ void taskToJSONObj(char *jsonObjStr, int index)
 	char statusStr[15];
 	char createdAtTimeStr[50];
 	char updatedAtTimeStr[50];
-	int numCharsWritten; //sprintf returns number of characters written, not including null characters
 
 	//tm must be set for strptime to work
 	struct tm tm;
@@ -114,7 +113,7 @@ void taskToJSONObj(char *jsonObjStr, int index)
 		perror("Error reading date and time!\n");
 	}
 	//using just %s instead of %.*s since we can be sure the createdAt and UpdatedAt strings are null terminated (unless?)
-		numCharsWritten = sprintf(jsonObjStr,"{\"id\":%d,\"description\":\"%s\",\"status\":\"%s\",\"createdAt\":\"%s\",\"updatedAt\":\"%s\"}\n",tasks[index].id,tasks[index].description,
+		sprintf(jsonObjStr,"{\"id\":%d,\"description\":\"%s\",\"status\":\"%s\",\"createdAt\":\"%s\",\"updatedAt\":\"%s\"}\n",tasks[index].id,tasks[index].description,
 														  statusStr,
 														  createdAtTimeStr,
 														  updatedAtTimeStr);
