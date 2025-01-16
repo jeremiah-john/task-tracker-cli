@@ -56,6 +56,7 @@ int getTaskIndexByID(int taskID)
 	}
 	return -1;
 }
+
 int markTask(int taskID, enum Status newStatus)
 {
 	int taskIndex = getTaskIndexByID(taskID);
@@ -154,5 +155,20 @@ int updateTask(int taskID, char *newTaskDesc)
 	tempTM = gmtime(&currTime);
 	tasks[taskIndex].updatedAtTime = *tempTM;
 
+	return 0;
+}
+int deleteTask(int taskID)
+{
+	int taskIndex = getTaskIndexByID(taskID);
+	if (taskIndex == -1)
+	{
+		printf("ERROR: no task found by that ID!\n");
+		return -1;
+	}
+	for(int i = taskIndex; i < MAX_TASKS - 1; i++)
+	{
+		tasks[i] = tasks[i+1];
+	}
+	memset(&tasks[MAX_TASKS-1],0,sizeof(struct task_t));
 	return 0;
 }

@@ -61,7 +61,24 @@ int main(int argc, char **argv)
 	//delete will just have argv[2] be task ID(int)
 	if(strcmp(argv[1],"delete") == 0)
 	{
+		if(argc > 3)
+		{
+			printf("Too many arguments!\nOnly update one task at a time please!"); //we actually could try batch updating and deleting tasks
+			return E2BIG;
+		}
+		if(argc < 3)
+		{
+			printf("Give a task ID!\n");
+			return EINVAL;
+		}
+		int taskDeleteResult = deleteTask(atoi(argv[2]));
+		if(taskDeleteResult == -1)
+		{
+			printf("Could not delete specified task!\n");
+			return EINVAL;
+		}
 		printf("successful delete!\n");
+		return writeJSONFile();
 	}
 	//mark-in-progress and mark-done will just take argv[2] which is integer of task ID
 	if(strcmp(argv[1],"mark-in-progress") == 0)
