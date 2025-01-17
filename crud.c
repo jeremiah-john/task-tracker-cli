@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
+
 #include "jsonObjectCreation.h"
 #include "crud.h"
 #include "status.h"
@@ -17,6 +18,7 @@ struct task_t {
 } tasks[MAX_TASKS] = {0};
 int nextAvailableTaskIndex = 0;
 int nextAvailableTaskID = 1;
+
 enum Status statusStrToEnum(char *statusStr)
 {
 	if(strcmp(statusStr,"To-do") == 0)
@@ -183,7 +185,7 @@ void taskToJSONObj(char *jsonObjStr, int index)
 		perror("Error reading date and time!\n");
 	}
 	//using just %s instead of %.*s since we can be sure the createdAt and UpdatedAt strings are null terminated (unless?)
-		int numCharsWritten = printf(jsonObjStr,"{\"id\":%d,\"description\":\"%s\",\"status\":\"%s\",\"createdAt\":\"%s\",\"updatedAt\":\"%s\"}\n",tasks[index].id,tasks[index].description,
+		int numCharsWritten = sprintf(jsonObjStr,"{\"id\":%d,\"description\":\"%s\",\"status\":\"%s\",\"createdAt\":\"%s\",\"updatedAt\":\"%s\"}\n",tasks[index].id,tasks[index].description,
 														  statusStr,
 														  createdAtTimeStr,
 														  updatedAtTimeStr);
