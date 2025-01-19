@@ -191,9 +191,6 @@ void taskToJSONObj(char *jsonObjStr, int index)
 	char createdAtTimeStr[50];
 	char updatedAtTimeStr[50];
 
-	//tm must be set for strftime to work
-	struct tm tm;
-	memset(&tm, 0, sizeof(tm));
 	if(tasks[index].id != 0)
 	{
 		statusEnumToStr(statusStr,index);
