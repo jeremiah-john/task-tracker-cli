@@ -85,7 +85,7 @@ int main(int argc, char **argv)
 	//mark-in-progress and mark-done will just take argv[2] which is integer of task ID
 	if(strcmp(argv[1],"mark-in-progress") == 0)
 	{
-		enum Status inProg = inProgress;
+		enum Status newStatus = inProgress;
 		if(argc > 3)
 		{
 			printf("Too many arguments!\nOnly update one task at a time please!"); //we actually could try batch updating and deleting tasks
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 			printf("Give a task ID!\n");
 			return EINVAL;
 		}
-		int taskMarkResult = markTask(atoi(argv[2]),inProg);
+		int taskMarkResult = markTask(atoi(argv[2]),newStatus);
 		if(taskMarkResult == -1)
 		{
 			printf("Could not mark task!\n");
@@ -107,9 +107,48 @@ int main(int argc, char **argv)
 	}
 	if(strcmp(argv[1],"mark-done") == 0)
 	{
+		enum Status newStatus = done;
+		if(argc > 3)
+		{
+			printf("Too many arguments!\nOnly update one task at a time please!"); //we actually could try batch updating and deleting tasks
+			return E2BIG;
+		}
+		if(argc < 3)
+		{
+			printf("Give a task ID!\n");
+			return EINVAL;
+		}
+		int taskMarkResult = markTask(atoi(argv[2]),newStatus);
+		if(taskMarkResult == -1)
+		{
+			printf("Could not mark task!\n");
+			return EINVAL;
+		}
 		printf("successful mark-done!\n");
+		return writeJSONFile();
 	}
-
+	if(strcmp(argv[1],"mark-halted") == 0)
+	{
+		enum Status newStatus = halted;
+		if(argc > 3)
+		{
+			printf("Too many arguments!\nOnly update one task at a time please!"); //we actually could try batch updating and deleting tasks
+			return E2BIG;
+		}
+		if(argc < 3)
+		{
+			printf("Give a task ID!\n");
+			return EINVAL;
+		}
+		int taskMarkResult = markTask(atoi(argv[2]),newStatus);
+		if(taskMarkResult == -1)
+		{
+			printf("Could not mark task!\n");
+			return EINVAL;
+		}
+		printf("successful mark-halted!\n");
+		return writeJSONFile();
+	}
 	//must check if argv[2] is a NULL pointer (in which case, list all tasks), or if it is a string of status of tasks (remember we have an enum for this
 	if(strcmp(argv[1],"list") == 0)
 	{
