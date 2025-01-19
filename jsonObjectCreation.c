@@ -11,7 +11,6 @@ int readJSONFile()
 {
 	json = fopen("tasks.json","r");
 	char nextJSONObject[200];
-	int endOfFile = 0;
 
 	if(json == NULL)
 	{
@@ -19,18 +18,21 @@ int readJSONFile()
 		fflush(stderr);
 		return 1;
 	}
+
+	int nextChar = fgetc(json);
 	/* test if file is empty using fgetc
 	 * (feof only looks at result of last File I/O operation, based on whether EOF indicator has been set)
 	 */
-	fgetc(json);
-	if (feof(json)){return fclose(json);}
-	rewind(json);
-	while(endOfFile == 0)
+	while(nextChar != EOF)
 	{
-		fgets(nextJSONObject,sizeof(nextJSONObject),json); //nextJSONObject will include newline
-		jsonObjToTask(nextJSONObject);
-		memset(nextJSONObject,0,sizeof(nextJSONObject)); //paranoid precaution to make sure no leftover chars from last fgets
-		endOfFile = feof(json);
+		if(nextChar == '{')
+		{
+			ungetc(nextChar,json);
+			fgets(nextJSONObject,sizeof(nextJSONObject),json); //nextJSONObject will include newline
+			jsonObjToTask(nextJSONObject);
+			memset(nextJSONObject,0,sizeof(nextJSONObject)); //paranoid precaution to make sure no leftover chars from last fgets
+		}
+		nextChar = fgetc(json);
 	}
 	return fclose(json);
 }
@@ -39,14 +41,17 @@ int writeJSONFile()
 	json = fopen("tasks.json","w");
 	int taskIndex = 0;
 	char jsonObj[200] = {0};
+	fprintf(json,"[\n");
 	while(1) //while no error is returned trying to convert our task to a JSON object
 	{
 		taskToJSONObj(jsonObj,taskIndex);
 		if(jsonObj[0] == 0) {break;}
+		if(taskIndex >= 1){fprintf(json,",\n");} //if we have more than one task, then we need a comma to separate the subsequent JSON Objects
 		fprintf(json,jsonObj);
 		taskIndex++;
 		memset(jsonObj,0,sizeof(jsonObj));
 	}
+	fprintf(json,"]\n");
 	return fclose(json);
 }
 /*(int createObject(char *description)
