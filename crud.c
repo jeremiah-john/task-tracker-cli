@@ -1,7 +1,10 @@
 #define _XOPEN_SOURCE
 #define MAX_TASKS 100
-#define DEBUG
-#define DETAILED_DEBUG //for generating logs that might be lengthy or in-depth
+//#define DEBUG
+//#define DETAILED_DEBUG //for generating logs that might be lengthy or in-depth
+#define TRUE 1
+#define FALSE 0
+
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
@@ -114,6 +117,23 @@ int getTaskIndexByID(int taskID)
 	return -1;
 }
 
+void updateTaskTime(int taskIndex, int boolSetCreatedTime, int boolSetUpdatedTime)
+{
+	time_t currTime;
+	time(&currTime);
+	struct tm *tempTM; //for holding results of gmtime, to then copy to member struct tms of task struct
+
+	tempTM = gmtime(&currTime);
+	if(boolSetCreatedTime == TRUE)
+	{
+		tasks[taskIndex].createdAtTime = *tempTM;
+	}
+	if(boolSetUpdatedTime == TRUE)
+	{
+		tasks[taskIndex].updatedAtTime = *tempTM;
+	}
+}
+
 int markTask(int taskID, enum Status newStatus)
 {
 	int taskIndex = getTaskIndexByID(taskID);
@@ -127,6 +147,7 @@ int markTask(int taskID, enum Status newStatus)
 	#ifdef DEBUG
 		printf("markTask: status (numerical value) of task with ID (%d) is now (%d)\n",taskID, (int) tasks[taskIndex].status);
 	#endif
+	updateTaskTime(taskIndex,FALSE,TRUE);
 	return 0;
 }
 void jsonObjToTask(char *jsonObjStr)
@@ -197,17 +218,11 @@ void taskToJSONObj(char *jsonObjStr, int index)
 
 int createTask(char *taskDesc)
 {
-	time_t currTime;
-	time(&currTime);
-	struct tm *tempTM; //for holding results of gmtime, to then copy to member struct tms of new task struct
 
 	tasks[nextAvailableTaskIndex].id = nextAvailableTaskID;
 	strcpy(tasks[nextAvailableTaskIndex].description, taskDesc);
 	tasks[nextAvailableTaskIndex].status = todo;
-	tempTM = gmtime(&currTime);
-	tasks[nextAvailableTaskIndex].createdAtTime = *tempTM;
-	tempTM = gmtime(&currTime);
-	tasks[nextAvailableTaskIndex].updatedAtTime = *tempTM;
+	updateTaskTime(nextAvailableTaskIndex,TRUE,TRUE);
 
 	return tasks[nextAvailableTaskIndex].id;
 
@@ -215,9 +230,6 @@ int createTask(char *taskDesc)
 
 int updateTask(int taskID, char *newTaskDesc)
 {
-	time_t currTime;
-	time(&currTime);
-	struct tm *tempTM; //for holding results of gmtime, to then copy to member struct tms of task struct
 	#ifdef DEBUG
 		printf("updaateTask: attempting to update task with ID (%d)\n", taskID);
 	#endif
@@ -228,8 +240,7 @@ int updateTask(int taskID, char *newTaskDesc)
 		return -1;
 	}
 	strcpy(tasks[taskIndex].description, newTaskDesc);
-	tempTM = gmtime(&currTime);
-	tasks[taskIndex].updatedAtTime = *tempTM;
+	updateTaskTime(taskIndex,FALSE,TRUE);
 
 	return 0;
 }
