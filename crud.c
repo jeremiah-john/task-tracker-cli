@@ -58,9 +58,9 @@ enum Status statusStrToEnum(char *statusStr)
 	return nullStatus;
 }
 //perhaps lets make this return a string? (be wary of how passing by reference or value works for char arrays)
-void statusEnumToStr(char *statusStr,int index)
+void statusEnumToStr(char *statusStr,struct task_t task)
 {
-	switch(tasks[index].status){
+	switch(task.status){
 		case todo:
 			#ifdef DEBUG
 				printf("statusEnumToStr: Task status is todo\n");
@@ -193,7 +193,7 @@ void taskToJSONObj(char *jsonObjStr, int index)
 
 	if(tasks[index].id != 0)
 	{
-		statusEnumToStr(statusStr,index);
+		statusEnumToStr(statusStr,tasks[index]);
 		if(strftime(createdAtTimeStr,sizeof(createdAtTimeStr), "%a %b %d %I:%M:%S %Y",&tasks[index].createdAtTime) == 0) //if we can't properly convert the date and time
 	{
 		perror("Error reading date and time!\n");
