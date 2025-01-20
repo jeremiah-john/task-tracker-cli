@@ -256,3 +256,41 @@ int deleteTask(int taskID)
 	memset(&tasks[MAX_TASKS-1],0,sizeof(struct task_t));
 	return 0;
 }
+void printTask(struct task_t task)
+{
+	char statusStr[15];
+	char createdAtTimeStr[50];
+	char updatedAtTimeStr[50];
+
+	statusEnumToStr(statusStr,task);
+	strftime(createdAtTimeStr,sizeof(createdAtTimeStr), "%a %b %d %I:%M:%S %Y",&task.createdAtTime);
+	strftime(updatedAtTimeStr,sizeof(updatedAtTimeStr), "%a %b %d %I:%M:%S %Y",&task.updatedAtTime);
+	printf("--------------------------\n");
+	printf("| ID: %d\n",task.id);
+	printf("| description %s\n",task.description);
+	printf("| status: %s\n",statusStr);
+	printf("|Created at: %s\n",createdAtTimeStr);
+	printf("| Updated at: %s\n",updatedAtTimeStr);
+	printf("--------------------------\n");
+}
+int listTask(enum Status searchStatus)
+{
+	int i = 0;
+	while (i < MAX_TASKS)
+	{
+		if(tasks[i].status == nullStatus)
+		{
+			break;
+		}
+		if(searchStatus == (todo | inProgress | halted | done)) //if all Status enum values are set
+		{
+			printTask(tasks[i]);
+		}
+		else if(searchStatus == tasks[i].status)
+		{
+			printTask(tasks[i]);
+		}
+		i++;
+	}
+	return 0;
+}

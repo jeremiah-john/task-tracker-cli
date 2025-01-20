@@ -152,7 +152,39 @@ int main(int argc, char **argv)
 	//must check if argv[2] is a NULL pointer (in which case, list all tasks), or if it is a string of status of tasks (remember we have an enum for this
 	if(strcmp(argv[1],"list") == 0)
 	{
-		printf("successful list!\n");
+		if(argc == 2){
+			listTask((todo | inProgress | halted | done));
+		}
+		else if (argc > 3)
+		{
+			printf("Too many arguments!\nIf you wish to list all tasks, just use subcommand 'list'\n");
+			return E2BIG;
+		}
+		else
+		{
+			if(strcmp(argv[2],"done") == 0)
+			{
+				listTask(done);
+			}
+			else if(strcmp(argv[2],"todo") == 0)
+			{
+				listTask(todo);
+			}
+			else if(strcmp(argv[2],"halted") == 0)
+			{
+				listTask(halted);
+			}
+			else if(strcmp(argv[2],"in-progress") == 0)
+			{
+				listTask(inProgress);
+			}
+			else
+			{
+				printf("Incorrect argument for list!\noptions for list: todo,done,in-progress,halted\n");
+				return EINVAL;
+			}
+		}
+		return writeJSONFile();
 	}
 
 	return 0;
