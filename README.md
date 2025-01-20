@@ -2,12 +2,12 @@
 a simple command line based Task Tracker.
 created a a solution for [roadmap.sh](https://roadmap.sh/projects/task-tracker)
 
-###How to Build
+### How to Build
 ```
 git clone https://github.com/jeremiah-john/task-tracker-cli
 make
 ```
-###Commands
+### Commands
 ```
 add [description]
 update [id] [description]
